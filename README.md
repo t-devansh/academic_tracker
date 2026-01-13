@@ -1,20 +1,55 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎓 Student Command Center Dashboard
 
-# Run and deploy your AI Studio app
+A modern academic dashboard designed to help students track their courses, tasks, and progress throughout the term. The interface provides a clear overview of assignments, course status, and important academic schedules.
 
-This contains everything you need to run your app locally.
+## ✨ Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1wo60gZkw9FIM8AGh8jLJO5X8XD1iHnQn
+- **Dashboard Overview**
+  - Term progress tracker  
+  - Task summary (Upcoming, Not Started, In Progress, Overdue)
 
-## Run Locally
+- **Task Management**
+  - View all tasks  
+  - Calendar integration  
+  - Exam schedule access  
 
-**Prerequisites:**  Node.js
+- **Course Tracking**
+  - Course list with progress bars  
+  - Completion status for each subject  
 
+- **Navigation Menu**
+  - Dashboard  
+  - Courses  
+  - All Tasks  
+  - Calendar  
+  - Exam Schedule  
+  - Timetable  
+  - Import Syllabus  
+  - Settings  
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **Modern UI**
+  - Clean layout  
+  - Toggle between *Modern* and *Classic* themes  
+
+## 📸 Preview
+
+![Dashboard Preview](./screenshot.png)
+
+## 🛠 Tech Stack
+
+*(Update based on your project)*  
+- HTML / CSS / JavaScript  
+- React / Vue / Next.js *(if applicable)*  
+- Tailwind / Bootstrap *(if applicable)*  
+
+## 🚀 Getting Started
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/project-name.git
+
+# Install dependencies
+npm install
+
+# Run project
+npm start
