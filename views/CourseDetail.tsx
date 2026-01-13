@@ -12,33 +12,18 @@ interface CourseDetailProps {
   course: Course;
   assignments: Assignment[];
   onUpdateAssignment: (id: string, updates: Partial<Assignment>) => void;
-  onAddAssignment: (assignment: Omit<Assignment, 'id'>) => void;
+  onAddAssignment: (courseId: string) => void;
   onUpdateCourse: (id: string, updates: Partial<Course>) => void;
   onDeleteCourse: (id: string) => void;
   onOpenTask: (task: Assignment) => void;
 }
 
-// NOTE: Changed onAddAssignment signature in App.tsx to support object passing? 
-// Actually App.tsx usually passes (courseId: string). 
-// The WeightAdjustmentModal needs to add assignments fully defined.
-// We need to update the prop type here or handle the difference.
-// Let's assume App.tsx passes `addAssignment` from store which expects `Omit<Assignment, 'id'>`.
-// But CourseDetail currently receives `onAddAssignment: (courseId: string) => void`.
-// I will need to update CourseDetail's interface to accept the full store addAssignment function or update the wrapper.
-// To keep it clean without changing App.tsx signature blindly, I will check what App passes.
-// App passes: `onAddAssignment={handleAddAssignmentInCourse}` which creates a blank one.
-// I need access to the raw store `addAssignment`.
-// Solution: Update App.tsx to pass the raw store function as well, or update the existing prop.
-// For now, I will assume I need to fix App.tsx integration in the next step.
-// Wait, I can't change App.tsx in this file block. 
-// I will change the interface here and expect App.tsx to be updated in the XML.
-
 const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<Assignment, 'id'>) => void, onDeleteAssignment: (id: string) => void }> = ({ 
   course, 
   assignments, 
   onUpdateAssignment, 
-  onAddAssignment, // The one that takes courseId (quick add)
-  onAddAssignmentRaw, // The one that takes full object (from store)
+  onAddAssignment, 
+  onAddAssignmentRaw, 
   onDeleteAssignment,
   onUpdateCourse, 
   onDeleteCourse, 
