@@ -1,0 +1,8 @@
+{
+  "name": "Academic Command Center",
+  "description": "A comprehensive academic tracking application for monitoring assignments, grades, and progress with AI-assisted course setup and predictive analytics.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
