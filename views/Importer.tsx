@@ -12,7 +12,11 @@ const SCHEMA_EXAMPLE = {
     code: "CODE101",
     credits: 3,
     targetGrade: 85,
-    color: "#4F46E5"
+    color: "#4F46E5",
+    schedule: [
+       { day: "Mon", startTime: "10:00", endTime: "11:30", location: "Room 101" },
+       { day: "Wed", startTime: "10:00", endTime: "11:30", location: "Room 101" }
+    ]
   },
   assignments: [
     {
@@ -41,6 +45,8 @@ Rules:
 3. type must be one of: Assignment, Lab, Quiz, Midterm, Final, Other.
 4. priority must be: Low, Medium, High.
 5. status must be: Not Started.
+6. schedule days must be: Mon, Tue, Wed, Thu, Fri, Sat, Sun.
+7. startTime and endTime must be HH:mm (24h).
 
 Syllabus Text: [PASTE YOUR SYLLABUS HERE]`;
     
@@ -63,7 +69,8 @@ Syllabus Text: [PASTE YOUR SYLLABUS HERE]`;
           ...data.course,
           color: data.course.color || '#4F46E5',
           targetGrade: data.course.targetGrade || 80,
-          credits: data.course.credits || 3
+          credits: data.course.credits || 3,
+          schedule: Array.isArray(data.course.schedule) ? data.course.schedule : []
         },
         assignments: data.assignments.map((a: any) => ({
           ...a,

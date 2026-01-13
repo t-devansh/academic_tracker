@@ -36,6 +36,13 @@ export interface Assignment {
   links?: { title: string; url: string }[];
 }
 
+export interface ClassSchedule {
+  day: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
+  startTime: string; // Format "HH:mm" 24h
+  endTime: string;   // Format "HH:mm" 24h
+  location?: string;
+}
+
 export interface Course {
   id: string;
   name: string;
@@ -44,6 +51,7 @@ export interface Course {
   targetGrade: number;
   credits: number;
   term?: string; // e.g., "Fall 2024"
+  schedule?: ClassSchedule[];
 }
 
 export interface TrashedItem {

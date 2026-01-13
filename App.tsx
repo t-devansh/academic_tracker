@@ -8,6 +8,8 @@ import Importer from './views/Importer';
 import Calendar from './views/Calendar';
 import AllTasks from './views/AllTasks';
 import Settings from './views/Settings';
+import ExamSchedule from './views/ExamSchedule';
+import Timetable from './views/Timetable';
 import TaskModal from './components/TaskModal';
 import { useAppState } from './store';
 import { AssignmentStatus, AssignmentPriority, AssignmentType, Assignment } from './types';
@@ -121,6 +123,14 @@ const App: React.FC = () => {
             state={state}
             onAddTask={handleQuickAddTask}
           />
+        );
+      case 'exam-schedule':
+        return (
+          <ExamSchedule state={state} />
+        );
+      case 'timetable':
+        return (
+          <Timetable state={state} />
         );
       case 'all-tasks':
         return (

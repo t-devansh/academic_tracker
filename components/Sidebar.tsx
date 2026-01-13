@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { IconLayout, IconCalendar, IconChart, IconBook, IconImport, IconList, IconSettings, IconScholar } from './Icons';
+import { IconLayout, IconCalendar, IconBook, IconImport, IconList, IconSettings, IconScholar, IconExam, IconTimetable } from './Icons';
 
 interface SidebarProps {
   currentView: string;
@@ -13,7 +13,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate }) => {
     { id: 'courses', label: 'Courses', icon: <IconBook /> },
     { id: 'all-tasks', label: 'All Tasks', icon: <IconList /> },
     { id: 'calendar', label: 'Calendar', icon: <IconCalendar /> },
-    { id: 'analytics', label: 'Performance', icon: <IconChart /> },
+    { id: 'exam-schedule', label: 'Exam Schedule', icon: <IconExam /> },
+    { id: 'timetable', label: 'Timetable', icon: <IconTimetable /> },
     { id: 'importer', label: 'Import Syllabus', icon: <IconImport /> },
     { id: 'settings', label: 'Settings', icon: <IconSettings /> },
   ];

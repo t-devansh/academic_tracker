@@ -8,8 +8,32 @@ const MOCK_DATA: AppState = {
   termStart: new Date(Date.now() - 86400000 * 30).toISOString(),
   termEnd: new Date(Date.now() + 86400000 * 90).toISOString(),
   courses: [
-    { id: 'c1', name: 'Introduction to Computer Science', code: 'CS101', color: '#3b82f6', targetGrade: 90, credits: 3, term: 'Fall 2024' },
-    { id: 'c2', name: 'Calculus I', code: 'MATH101', color: '#ef4444', targetGrade: 85, credits: 4, term: 'Fall 2024' },
+    { 
+      id: 'c1', 
+      name: 'Introduction to Computer Science', 
+      code: 'CS101', 
+      color: '#3b82f6', 
+      targetGrade: 90, 
+      credits: 3, 
+      term: 'Fall 2024',
+      schedule: [
+        { day: 'Mon', startTime: '10:00', endTime: '11:30', location: 'Room 301' },
+        { day: 'Wed', startTime: '10:00', endTime: '11:30', location: 'Room 301' }
+      ]
+    },
+    { 
+      id: 'c2', 
+      name: 'Calculus I', 
+      code: 'MATH101', 
+      color: '#ef4444', 
+      targetGrade: 85, 
+      credits: 4, 
+      term: 'Fall 2024',
+      schedule: [
+        { day: 'Tue', startTime: '14:00', endTime: '15:30', location: 'Hall B' },
+        { day: 'Thu', startTime: '14:00', endTime: '15:30', location: 'Hall B' }
+      ]
+    },
   ],
   assignments: [
     {
