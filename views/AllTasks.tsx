@@ -112,9 +112,10 @@ const AllTasks: React.FC<AllTasksProps> = ({ state, onAddTask, onUpdateStatus })
                 {filteredTasks.map(task => {
                   const course = state.courses.find(c => c.id === task.courseId);
                   const displayInfo = getTaskDisplayInfo(task);
+                  const isExam = [AssignmentType.MIDTERM, AssignmentType.FINAL, AssignmentType.QUIZ].includes(task.type);
                   
                   return (
-                    <tr key={task.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={task.id} className={`${isExam ? 'bg-rose-50 hover:bg-rose-100' : 'hover:bg-slate-50/50'} transition-colors`}>
                       <td className="px-8 py-5">
                         <div className="font-bold text-slate-800">{task.name}</div>
                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{task.type}</div>

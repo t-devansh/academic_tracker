@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { AppState, AssignmentStatus, Course } from '../types';
 import { IconPlus } from '../components/Icons';
-import AddCourseModal from '../components/AddCourseModal';
+import CourseFormModal from '../components/AddCourseModal';
 import { useAppState } from '../store';
 
 interface CoursesProps {
@@ -78,9 +78,9 @@ const Courses: React.FC<CoursesProps> = ({ state, onNavigateToCourse, onNavigate
       </div>
 
       {isModalOpen && (
-        <AddCourseModal 
+        <CourseFormModal 
           onClose={() => setIsModalOpen(false)}
-          onAdd={(course) => addCourse(course)}
+          onSave={(course) => addCourse(course)}
           onSwitchToImport={() => {
             setIsModalOpen(false);
             if (onNavigateToImporter) onNavigateToImporter();

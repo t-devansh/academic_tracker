@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, AssignmentStatus, Assignment } from '../types';
+import { AppState, AssignmentStatus, Assignment, AssignmentType } from '../types';
 import { IconBook, IconCheck, IconClock, IconWarning, IconCalendar } from '../components/Icons';
 import { getTaskDisplayInfo } from '../utils';
 
@@ -149,10 +149,12 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigateToCourse, onUpda
                 const course = state.courses.find(c => c.id === task.courseId);
                 const date = new Date(task.dueDate);
                 const displayInfo = getTaskDisplayInfo(task);
+                const isExam = [AssignmentType.MIDTERM, AssignmentType.FINAL, AssignmentType.QUIZ].includes(task.type);
+                
                 return (
                   <div key={task.id} 
                     onClick={() => onOpenTask(task)}
-                    className="bg-white p-5 rounded-[1.25rem] border border-slate-100 shadow-sm flex items-center gap-5 hover:border-slate-200 transition-colors cursor-pointer group"
+                    className={`${isExam ? 'bg-rose-50 border-rose-100 hover:border-rose-300' : 'bg-white border-slate-100 hover:border-slate-200'} p-5 rounded-[1.25rem] border shadow-sm flex items-center gap-5 transition-colors cursor-pointer group`}
                   >
                     <button 
                       onClick={(e) => { e.stopPropagation(); onUpdateStatus(task.id, AssignmentStatus.SUBMITTED); }}

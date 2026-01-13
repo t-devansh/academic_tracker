@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, Assignment } from '../types';
+import { AppState, Assignment, AssignmentType } from '../types';
 import { IconChevronLeft, IconChevronRight, IconPlus, IconCalendar } from '../components/Icons';
 
 interface CalendarProps {
@@ -149,16 +149,20 @@ const Calendar: React.FC<CalendarProps> = ({ state, onAddTask }) => {
           </div>
 
           <div className="flex-1 space-y-4 overflow-y-auto pr-2">
-            {tasksOnSelectedDate.map(task => (
-              <div key={task.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:border-indigo-200">
-                <p className="text-xs font-black text-indigo-500 uppercase mb-1">{task.type}</p>
-                <h4 className="text-sm font-bold text-slate-800 mb-1">{task.name}</h4>
-                <div className="flex justify-between items-center mt-3">
-                  <span className="text-[10px] font-bold px-2 py-0.5 bg-white border border-slate-100 rounded-lg text-slate-500">{task.priority}</span>
-                  <span className="text-[10px] font-bold text-slate-400">{task.weight}% weight</span>
+            {tasksOnSelectedDate.map(task => {
+              const isExam = [AssignmentType.MIDTERM, AssignmentType.FINAL, AssignmentType.QUIZ].includes(task.type);
+              
+              return (
+                <div key={task.id} className={`p-4 rounded-2xl border transition-all hover:border-indigo-200 ${isExam ? 'bg-rose-50 border-rose-100' : 'bg-slate-50 border-slate-100'}`}>
+                  <p className="text-xs font-black text-indigo-500 uppercase mb-1">{task.type}</p>
+                  <h4 className="text-sm font-bold text-slate-800 mb-1">{task.name}</h4>
+                  <div className="flex justify-between items-center mt-3">
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-white border border-slate-100 rounded-lg text-slate-500">{task.priority}</span>
+                    <span className="text-[10px] font-bold text-slate-400">{task.weight}% weight</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {tasksOnSelectedDate.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">

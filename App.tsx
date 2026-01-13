@@ -15,7 +15,7 @@ import { useAppState } from './store';
 import { AssignmentStatus, AssignmentPriority, AssignmentType, Assignment } from './types';
 
 const App: React.FC = () => {
-  const { state, updateAssignment, addAssignment, deleteAssignment, deleteCourse, restoreFromTrash, emptyTrash, importCourseData, loadState } = useAppState();
+  const { state, updateAssignment, addAssignment, deleteAssignment, deleteCourse, updateCourse, restoreFromTrash, emptyTrash, importCourseData, loadState } = useAppState();
   const [currentView, setCurrentView] = useState('dashboard');
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [activeTask, setActiveTask] = useState<Assignment | null>(null);
@@ -101,6 +101,9 @@ const App: React.FC = () => {
             assignments={state.assignments.filter(a => a.courseId === course.id)}
             onUpdateAssignment={updateAssignment}
             onAddAssignment={handleAddAssignmentInCourse}
+            onAddAssignmentRaw={addAssignment}
+            onDeleteAssignment={deleteAssignment}
+            onUpdateCourse={updateCourse}
             onDeleteCourse={(id) => {
               deleteCourse(id);
               setCurrentView('dashboard');

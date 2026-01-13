@@ -102,7 +102,7 @@ const ExamSchedule: React.FC<ExamScheduleProps> = ({ state }) => {
                 const date = new Date(exam.dueDate);
                 const course = state.courses.find(c => c.id === exam.courseId);
                 return (
-                  <div key={exam.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-indigo-200 transition-all group">
+                  <div key={exam.id} className="p-4 bg-rose-50 rounded-2xl border border-rose-100 hover:border-rose-300 transition-all group">
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-[10px] font-black uppercase text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">{exam.type}</span>
                       <span className="text-[10px] font-bold text-slate-400">{exam.weight}% Weight</span>

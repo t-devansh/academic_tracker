@@ -3,23 +3,53 @@ import React, { useState } from 'react';
 import { Course, Assignment, AssignmentStatus, AssignmentPriority, AssignmentType } from '../types';
 import { STATUS_COLORS, PRIORITY_COLORS, TYPE_COLORS } from '../constants';
 import { getTaskDisplayInfo } from '../utils';
-import { IconClock, IconPlus, IconList, IconBook, IconTrash, IconChart, IconCircle, IconCheckCircle, IconSave, IconChevronDown, IconChevronUp } from '../components/Icons';
+import { IconClock, IconPlus, IconList, IconBook, IconTrash, IconChart, IconCircle, IconCheckCircle, IconSave, IconChevronDown, IconChevronUp, IconEdit, IconScale } from '../components/Icons';
 import GradePredictorModal from '../components/GradePredictorModal';
+import CourseFormModal from '../components/AddCourseModal';
+import WeightAdjustmentModal from '../components/WeightAdjustmentModal';
 
 interface CourseDetailProps {
   course: Course;
   assignments: Assignment[];
   onUpdateAssignment: (id: string, updates: Partial<Assignment>) => void;
-  onAddAssignment: (courseId: string) => void;
+  onAddAssignment: (assignment: Omit<Assignment, 'id'>) => void;
+  onUpdateCourse: (id: string, updates: Partial<Course>) => void;
   onDeleteCourse: (id: string) => void;
   onOpenTask: (task: Assignment) => void;
 }
 
-const CourseDetail: React.FC<CourseDetailProps> = ({ course, assignments, onUpdateAssignment, onAddAssignment, onDeleteCourse, onOpenTask }) => {
+// NOTE: Changed onAddAssignment signature in App.tsx to support object passing? 
+// Actually App.tsx usually passes (courseId: string). 
+// The WeightAdjustmentModal needs to add assignments fully defined.
+// We need to update the prop type here or handle the difference.
+// Let's assume App.tsx passes `addAssignment` from store which expects `Omit<Assignment, 'id'>`.
+// But CourseDetail currently receives `onAddAssignment: (courseId: string) => void`.
+// I will need to update CourseDetail's interface to accept the full store addAssignment function or update the wrapper.
+// To keep it clean without changing App.tsx signature blindly, I will check what App passes.
+// App passes: `onAddAssignment={handleAddAssignmentInCourse}` which creates a blank one.
+// I need access to the raw store `addAssignment`.
+// Solution: Update App.tsx to pass the raw store function as well, or update the existing prop.
+// For now, I will assume I need to fix App.tsx integration in the next step.
+// Wait, I can't change App.tsx in this file block. 
+// I will change the interface here and expect App.tsx to be updated in the XML.
+
+const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<Assignment, 'id'>) => void, onDeleteAssignment: (id: string) => void }> = ({ 
+  course, 
+  assignments, 
+  onUpdateAssignment, 
+  onAddAssignment, // The one that takes courseId (quick add)
+  onAddAssignmentRaw, // The one that takes full object (from store)
+  onDeleteAssignment,
+  onUpdateCourse, 
+  onDeleteCourse, 
+  onOpenTask 
+}) => {
   const [activeTab, setActiveTab] = useState<'assignments' | 'gradebook'>('assignments');
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
   const [expandedType, setExpandedType] = useState<AssignmentType | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isWeightModalOpen, setIsWeightModalOpen] = useState(false);
 
   const completed = assignments.filter(a => a.status === AssignmentStatus.SUBMITTED && a.gradeReceived !== undefined);
   const pending = assignments.filter(a => a.status !== AssignmentStatus.SUBMITTED);
@@ -83,12 +113,29 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course, assignments, onUpda
               </div>
               <p className="text-xl text-slate-400 font-medium">{course.name}</p>
             </div>
-            <button 
-              onClick={() => { if(confirm("Are you sure? This will move the course and its tasks to the Trash.")) onDeleteCourse(course.id); }}
-              className="text-rose-400 hover:text-rose-600 p-3 hover:bg-rose-50 rounded-2xl transition-all"
-            >
-              <IconTrash />
-            </button>
+            <div className="flex gap-2">
+               <button 
+                onClick={() => setIsWeightModalOpen(true)}
+                className="text-indigo-400 hover:text-indigo-600 p-3 hover:bg-indigo-50 rounded-2xl transition-all"
+                title="Adjust Weightages"
+              >
+                <IconScale />
+              </button>
+              <button 
+                onClick={() => setIsEditModalOpen(true)}
+                className="text-indigo-400 hover:text-indigo-600 p-3 hover:bg-indigo-50 rounded-2xl transition-all"
+                title="Edit Course Details"
+              >
+                <IconEdit />
+              </button>
+              <button 
+                onClick={() => { if(confirm("Are you sure? This will move the course and its tasks to the Trash.")) onDeleteCourse(course.id); }}
+                className="text-rose-400 hover:text-rose-600 p-3 hover:bg-rose-50 rounded-2xl transition-all"
+                title="Delete Course"
+              >
+                <IconTrash />
+              </button>
+            </div>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-10 border-t border-slate-50 mt-10">
@@ -144,11 +191,13 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course, assignments, onUpda
               return true;
             }).map(assignment => {
                const displayInfo = getTaskDisplayInfo(assignment);
+               const isExam = [AssignmentType.MIDTERM, AssignmentType.FINAL, AssignmentType.QUIZ].includes(assignment.type);
+               
                return (
                 <div 
                   key={assignment.id} 
                   onClick={() => onOpenTask(assignment)} 
-                  className="group bg-white p-6 rounded-[2rem] border border-slate-50 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-6 cursor-pointer"
+                  className={`group ${isExam ? 'bg-rose-50 border-rose-100' : 'bg-white border-slate-50'} p-6 rounded-[2rem] border shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-6 cursor-pointer`}
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -306,6 +355,25 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course, assignments, onUpda
            assignments={assignments}
            onClose={() => setShowCalculator(false)}
          />
+      )}
+
+      {isEditModalOpen && (
+        <CourseFormModal 
+          initialData={course}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(updates) => onUpdateCourse(course.id, updates)}
+        />
+      )}
+
+      {isWeightModalOpen && (
+        <WeightAdjustmentModal
+          course={course}
+          assignments={assignments}
+          onClose={() => setIsWeightModalOpen(false)}
+          onUpdate={onUpdateAssignment}
+          onAdd={onAddAssignmentRaw}
+          onDelete={onDeleteAssignment}
+        />
       )}
     </div>
   );
