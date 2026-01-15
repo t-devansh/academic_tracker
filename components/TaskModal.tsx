@@ -27,6 +27,13 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
     onUpdate(task.id, { [field]: value });
   };
 
+  const handleTBDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isTBD = e.target.checked;
+    const updated = { ...localTask, isTBD };
+    setLocalTask(updated);
+    onUpdate(task.id, { isTBD });
+  };
+
   const handleAddLink = () => {
     if (!newLinkTitle || !newLinkUrl) return;
     const links = [...(localTask.links || []), { title: newLinkTitle, url: newLinkUrl }];
@@ -86,12 +93,24 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Due Date</label>
+              <div className="flex justify-between items-center pr-1">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Due Date</label>
+                <label className="flex items-center gap-1 cursor-pointer select-none">
+                  <input 
+                    type="checkbox" 
+                    checked={localTask.isTBD || false} 
+                    onChange={handleTBDChange}
+                    className="w-3 h-3 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                  />
+                  <span className="text-[9px] font-bold text-slate-500">TBD</span>
+                </label>
+              </div>
               <input 
                 type="datetime-local"
                 value={localTask.dueDate.slice(0, 16)}
                 onChange={(e) => handleChange('dueDate', new Date(e.target.value).toISOString())}
-                className="w-full bg-slate-50 border-none rounded-xl p-3 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-indigo-100"
+                disabled={localTask.isTBD}
+                className={`w-full bg-slate-50 border-none rounded-xl p-3 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-indigo-100 ${localTask.isTBD ? 'opacity-50 cursor-not-allowed text-slate-400' : ''}`}
               />
             </div>
             <div className="space-y-1.5">

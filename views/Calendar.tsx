@@ -48,6 +48,7 @@ const Calendar: React.FC<CalendarProps> = ({ state, onAddTask }) => {
   }
 
   const tasksOnSelectedDate = state.assignments.filter(a => {
+    if (a.isTBD) return false;
     const d = new Date(a.dueDate);
     return d.getDate() === selectedDate.getDate() &&
            d.getMonth() === selectedDate.getMonth() &&
@@ -56,6 +57,7 @@ const Calendar: React.FC<CalendarProps> = ({ state, onAddTask }) => {
 
   const getWorkloadLevel = (date: Date) => {
     const count = state.assignments.filter(a => {
+      if (a.isTBD) return false;
       const d = new Date(a.dueDate);
       return d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear();
     }).length;

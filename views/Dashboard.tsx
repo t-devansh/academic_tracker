@@ -18,13 +18,20 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigateToCourse, onUpda
   
   const upcomingAssignments = state.assignments
     .filter(a => a.status !== AssignmentStatus.SUBMITTED)
-    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+    .sort((a, b) => {
+      // Sort logic: Normal dates first (asc), then TBDs at the bottom
+      if (a.isTBD && !b.isTBD) return 1;
+      if (!a.isTBD && b.isTBD) return -1;
+      if (a.isTBD && b.isTBD) return 0;
+      return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+    });
 
   const upcomingCount = upcomingAssignments.length;
   const notStartedCount = state.assignments.filter(a => a.status === AssignmentStatus.NOT_STARTED).length;
   const inProgressCount = state.assignments.filter(a => a.status === AssignmentStatus.IN_PROGRESS).length;
   const overdueCount = state.assignments.filter(a => 
     a.status !== AssignmentStatus.SUBMITTED && 
+    !a.isTBD && // Don't count TBD as overdue
     new Date(a.dueDate) < now
   ).length;
 
@@ -174,13 +181,15 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigateToCourse, onUpda
                       <h3 className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{task.name}</h3>
                     </div>
                     <div className="text-right flex flex-col items-end">
-                      <div className="flex items-center gap-1.5 text-rose-500 font-bold text-sm">
+                      <div className={`flex items-center gap-1.5 font-bold text-sm ${task.isTBD ? 'text-slate-400' : 'text-rose-500'}`}>
                         <IconClock /> 
-                        {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {task.isTBD ? 'TBD' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
-                      <div className="text-[10px] font-bold text-slate-400 mt-0.5">
-                        {date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-                      </div>
+                      {!task.isTBD && (
+                        <div className="text-[10px] font-bold text-slate-400 mt-0.5">
+                          {date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -255,7 +264,9 @@ const Dashboard: React.FC<DashboardProps> = ({ state, onNavigateToCourse, onUpda
                       <p className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-2">Next Deadline</p>
                       <p className="text-sm font-bold text-slate-700 truncate">{nextTask.name}</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-rose-500 font-bold">{new Date(nextTask.dueDate).toLocaleDateString()}</span>
+                        <span className={`text-xs font-bold ${nextTask.isTBD ? 'text-slate-400 italic' : 'text-rose-500'}`}>
+                           {nextTask.isTBD ? 'Date TBD' : new Date(nextTask.dueDate).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   )}

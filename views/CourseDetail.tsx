@@ -174,6 +174,11 @@ const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<
               if (filter === 'pending') return a.status !== AssignmentStatus.SUBMITTED;
               if (filter === 'completed') return a.status === AssignmentStatus.SUBMITTED;
               return true;
+            }).sort((a, b) => {
+              if (a.isTBD && !b.isTBD) return 1;
+              if (!a.isTBD && b.isTBD) return -1;
+              if (a.isTBD && b.isTBD) return 0;
+              return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
             }).map(assignment => {
                const displayInfo = getTaskDisplayInfo(assignment);
                const isExam = [AssignmentType.MIDTERM, AssignmentType.FINAL, AssignmentType.QUIZ].includes(assignment.type);
@@ -218,7 +223,9 @@ const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<
                     {/* Due Date Display (Added) */}
                     <div className="hidden md:flex flex-col items-end mr-4">
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Due Date</span>
-                        <span className="text-sm font-bold text-slate-600">{new Date(assignment.dueDate).toLocaleDateString()}</span>
+                        <span className={`text-sm font-bold ${assignment.isTBD ? 'text-slate-400 italic' : 'text-slate-600'}`}>
+                          {assignment.isTBD ? "TBD" : new Date(assignment.dueDate).toLocaleDateString()}
+                        </span>
                     </div>
 
                     <div className="flex flex-col items-end">

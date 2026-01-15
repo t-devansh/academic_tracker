@@ -27,6 +27,7 @@ export interface Assignment {
   name: string;
   description: string;
   dueDate: string;
+  isTBD?: boolean;
   weight: number; // Percentage of final grade (0-100)
   gradeReceived?: number; // Percentage (0-100)
   priority: AssignmentPriority;

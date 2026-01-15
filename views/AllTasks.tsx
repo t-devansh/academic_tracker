@@ -26,6 +26,12 @@ const AllTasks: React.FC<AllTasksProps> = ({ state, onAddTask, onUpdateStatus })
     const matchesStatus = statusFilter === 'All' || task.status === statusFilter;
     
     return matchesSearch && matchesCourse && matchesType && matchesPriority && matchesStatus;
+  }).sort((a, b) => {
+    // Sort logic: Normal dates first (asc), then TBDs at the bottom
+    if (a.isTBD && !b.isTBD) return 1;
+    if (!a.isTBD && b.isTBD) return -1;
+    if (a.isTBD && b.isTBD) return 0; // Or sort by name?
+    return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
   });
 
   return (
@@ -129,8 +135,8 @@ const AllTasks: React.FC<AllTasksProps> = ({ state, onAddTask, onUpdateStatus })
                         </span>
                       </td>
                       <td className="px-8 py-5">
-                         <span className="text-sm font-bold text-slate-600">
-                          {new Date(task.dueDate).toLocaleDateString()}
+                         <span className={`text-sm font-bold ${task.isTBD ? 'text-slate-400 italic' : 'text-slate-600'}`}>
+                          {task.isTBD ? "TBD" : new Date(task.dueDate).toLocaleDateString()}
                         </span>
                       </td>
                       <td className="px-8 py-5">
