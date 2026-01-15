@@ -34,6 +34,16 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
     onUpdate(task.id, { isTBD });
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (!val) return;
+    
+    const date = new Date(val);
+    if (!isNaN(date.getTime())) {
+      handleChange('dueDate', date.toISOString());
+    }
+  };
+
   const handleAddLink = () => {
     if (!newLinkTitle || !newLinkUrl) return;
     const links = [...(localTask.links || []), { title: newLinkTitle, url: newLinkUrl }];
@@ -48,6 +58,9 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
   };
 
   const isNewTask = !task.name;
+
+  // Safe date value for input
+  const dateValue = localTask.dueDate ? localTask.dueDate.slice(0, 16) : '';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
@@ -107,8 +120,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
               </div>
               <input 
                 type="datetime-local"
-                value={localTask.dueDate.slice(0, 16)}
-                onChange={(e) => handleChange('dueDate', new Date(e.target.value).toISOString())}
+                value={dateValue}
+                onChange={handleDateChange}
                 disabled={localTask.isTBD}
                 className={`w-full bg-slate-50 border-none rounded-xl p-3 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-indigo-100 ${localTask.isTBD ? 'opacity-50 cursor-not-allowed text-slate-400' : ''}`}
               />

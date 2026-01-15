@@ -74,10 +74,12 @@ Syllabus Text: [PASTE YOUR SYLLABUS HERE]`;
         },
         assignments: data.assignments.map((a: any) => ({
           ...a,
+          dueDate: a.dueDate || new Date().toISOString(), // Fallback for missing dates
           description: a.description || '',
           priority: Object.values(AssignmentPriority).includes(a.priority) ? a.priority : AssignmentPriority.MEDIUM,
           status: Object.values(AssignmentStatus).includes(a.status) ? a.status : AssignmentStatus.NOT_STARTED,
-          type: Object.values(AssignmentType).includes(a.type) ? a.type : AssignmentType.ASSIGNMENT
+          type: Object.values(AssignmentType).includes(a.type) ? a.type : AssignmentType.ASSIGNMENT,
+          isTBD: !a.dueDate // If no due date provided originally, mark TBD
         }))
       };
 
