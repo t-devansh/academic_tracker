@@ -29,9 +29,23 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, course, onClose, onUpdate, 
 
   const handleTBDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isTBD = e.target.checked;
-    const updated = { ...localTask, isTBD };
+    const updates: Partial<Assignment> = { isTBD };
+
+    if (!isTBD) {
+      // Set to 11:59 PM default when enabling date
+      const currentRef = localTask.dueDate && !isNaN(Date.parse(localTask.dueDate)) 
+        ? new Date(localTask.dueDate) 
+        : new Date();
+        
+      // Aligning with the app's ISO slice display logic: set UTC hours to 23:59
+      // This ensures the input (which typically slices the ISO string) displays 23:59
+      currentRef.setUTCHours(23, 59, 0, 0);
+      updates.dueDate = currentRef.toISOString();
+    }
+
+    const updated = { ...localTask, ...updates };
     setLocalTask(updated);
-    onUpdate(task.id, { isTBD });
+    onUpdate(task.id, updates);
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -30,7 +30,8 @@ const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<
   onOpenTask 
 }) => {
   const [activeTab, setActiveTab] = useState<'assignments' | 'gradebook'>('assignments');
-  const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
+  // Changed default filter to 'pending'
+  const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('pending');
   const [expandedType, setExpandedType] = useState<AssignmentType | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -158,7 +159,8 @@ const CourseDetail: React.FC<CourseDetailProps & { onAddAssignmentRaw: (a: Omit<
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
-              {(['all', 'pending', 'completed'] as const).map(t => (
+              {/* Reordered to Pending, All, Completed */}
+              {(['pending', 'all', 'completed'] as const).map(t => (
                 <button key={t} onClick={() => setFilter(t)} className={`px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === t ? 'bg-slate-900 text-white' : 'bg-white border border-slate-100 text-slate-400 hover:border-slate-300'}`}>
                   {t}
                 </button>
